@@ -1,0 +1,14 @@
+[mysqld]
+skip-host-cache
+skip-name-resolve
+
+general_log = 1
+general_log_file = /var/log/mysql/mysql.log
+log_output = 'FILE';
+
+log-error = /var/log/mysql/mysql_error.log
+
+slow_query_log = 1
+slow_query_log_file = /var/log/mysql/mysql_slow.log
+long_query_time = 1.0
+log_queries_not_using_indexes = 0

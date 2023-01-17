@@ -1,0 +1,54 @@
+version: '3.9'
+services:
+  apache:
+    image: httpd:latest
+    ports:
+    - '8080:80'
+
+  app:
+    image: python:3.7
+    build:
+      context: ./docker/python
+    volumes:
+      - ./src:/src
+    environment:
+      - TZ=${TZ}
+    working_dir: /src
+    tty: true
+    depends_on:
+      - db
+    command: python manage.py runserver 0.0.0.0:8011
+    ports: 
+      - "18011:8011"
+      
+  db:
+    user: "1000:50"
+    build:
+      context: "."
+      dockerfile: ./docker/mysql/Dockerfile
+    volumes:
+      - ./volumes/mysql:/var/lib/mysql
+      # - ./logs/mysql:/var/log/mysql
+      # - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+    environment:
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASS}
+      - MYSQL_ROOT_PASSWORD=${DB_PASS}
+      - TZ=${TZ}
+    ports:
+      - "33311:3311"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    depends_on:
+      - db
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOSTS=db
+      - UPLOAD_LIMIT=100M
+      - MAX_EXECUTION_TIME=3600
+    ports:
+      - "3011:80"
+    volumes:
+      - ./docker/phpmyadmin/sessions:/sessions

@@ -1,0 +1,14 @@
+numpy==1.16.0
+pandas
+mysql
+mysqlclient
+mysql-connector-python
+pymysql
+schedule
+beautifulsoup4
+schedule
+requests
+django
+djangorestframework
+djangorestframework-jwt
+django-filter
