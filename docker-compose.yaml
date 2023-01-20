@@ -17,7 +17,7 @@ services:
     tty: true
     depends_on:
       - db
-    command: python manage.py runserver 0.0.0.0:8011
+    # command: python manage.py runserver 0.0.0.0:8011
     ports: 
       - "18011:8011"
       

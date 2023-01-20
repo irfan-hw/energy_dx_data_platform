@@ -1,4 +1,7 @@
-# energy_dx_data_platform
+# energy_dx_data_platforms
 
-username: dev
-password: iforcom 1456
+ー　開発環境のセットアップ
+ー　Django のセットアップ 
+ー　データベースとの接続
+ー　データベースとの連携
+ー　API 開発
