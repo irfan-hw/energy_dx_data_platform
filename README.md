@@ -5,3 +5,5 @@
 ー　データベースとの接続
 ー　データベースとの連携
 ー　API 開発
+
+python manage.py runserver 0.0.0.0:8011
