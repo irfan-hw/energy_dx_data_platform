@@ -22,7 +22,6 @@ class TController(models.Model):
     last_updated = models.DateTimeField()
 
     class Meta:
-        managed = False
         db_table = 't_controller'
 
 
@@ -35,7 +34,6 @@ class TDataGet(models.Model):
     server_sync = models.IntegerField()
 
     class Meta:
-        managed = False
         db_table = 't_data_get'
         unique_together = (('device_id', 'get_cd', 'datetime_start'),)
 
@@ -49,9 +47,8 @@ class TDataSet(models.Model):
     device_sync = models.IntegerField()
 
     class Meta:
-        managed = False
         db_table = 't_data_set'
-        unique_together = (('device', 'set_cd', 'datetime', 'plan_no'),)
+        unique_together = (('device_id', 'set_cd', 'datetime', 'plan_no'),)
 
 
 class TDeviceDido(models.Model):
@@ -62,7 +59,6 @@ class TDeviceDido(models.Model):
     sys_di_or_do_cd = models.SmallIntegerField()
 
     class Meta:
-        managed = False
         db_table = 't_device_DIDO'
         unique_together = (('sys_device_type', 'sys_di_or_do_cd'),)
 
@@ -78,7 +74,6 @@ class TDeviceEnl(models.Model):
     ecl_epc = models.SmallIntegerField(db_column='ecl_EPC')  # Field name made lowercase.
 
     class Meta:
-        managed = False
         db_table = 't_device_ENL'
         unique_together = (('sys_device_type', 'sys_get_or_set_cd'),)
 
@@ -104,5 +99,4 @@ class TDevices(models.Model):
     deleted = models.DateTimeField(blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 't_devices'
