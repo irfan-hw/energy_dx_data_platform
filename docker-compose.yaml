@@ -17,19 +17,19 @@ services:
     tty: true
     depends_on:
       - db
-    command: python manage.py runserver 0.0.0.0:8011
+    command: nohup python kishou_data_torikomi/src/main.py & python manage.py runserver 0.0.0.0:8011
     ports: 
       - "18011:8011"
-      
+
   db:
+    container_name: energy_dx_data_platform_db
     user: "1000:50"
     build:
       context: "."
       dockerfile: ./docker/mysql/Dockerfile
     volumes:
       - ./volumes/mysql:/var/lib/mysql
-      # - ./logs/mysql:/var/log/mysql
-      # - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
     environment:
       - MYSQL_DATABASE=${DB_NAME}
       - MYSQL_USER=${DB_USER}
@@ -37,7 +37,7 @@ services:
       - MYSQL_ROOT_PASSWORD=${DB_PASS}
       - TZ=${TZ}
     ports:
-      - "33311:3311"
+      - "33311:3306"
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
