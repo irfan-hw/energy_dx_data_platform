@@ -3,6 +3,7 @@ from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
+from datetime import datetime,timedelta
 
 from .models import TController,TDataGet,TDataSet,TDeviceDido,TDeviceEnl,TDevices
 from .serializer import TControllerSerializer,TDataGetSerializer,TDataSetSerializer,TDeviceDidoSerializer,TDeviceEnlSerializer,TDevicesSerializer
@@ -58,23 +59,18 @@ class TDataSetViewSet(viewsets.ModelViewSet):
         self.queryset = TDataSet.objects.all()
 
         _device_id = self.request.query_params.get('device_id', None)
-        _set_cd = self.request.query_params.get('set_cd', None)
-        _datetime = self.request.query_params.get('datetime', None)
-        _plan_no = self.request.query_params.get('plan_no', None)
+        # _set_cd = self.request.query_params.get('set_cd', None)
+        # _datetime = self.request.query_params.get('datetime', None)
+        # _plan_no = self.request.query_params.get('plan_no', None)
 
-        if _device_id is None or _set_cd is None or _datetime is None or _plan_no is None:
+        if _device_id is None:
             raise ValidationError(detail='Query parameter not complete', code=400)
 
-        query_filters = {
-            "device_id":_device_id,
-            "set_cd":_set_cd,
-            "datetime": _datetime,
-            "plan_no":_plan_no
-        }
-        # if _plan_no is not None:
-        #     query_filters["plan_no"]=_plan_no
-
-        self.queryset = TDataSet.objects.filter(**query_filters)
+        self.queryset = TDataSet.objects.filter( 
+            device_id=_device_id, 
+            datetime__gte = datetime.now(), 
+            datetime__lte = datetime.now() + timedelta(hours=24)
+        )
         return self.queryset
     
     def put(self, request, *args, **kwargs):
