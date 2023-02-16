@@ -30,7 +30,7 @@ class TDataGet(models.Model):
     get_cd = models.SmallIntegerField()
     datetime_start = models.DateTimeField()
     datetime_end = models.DateTimeField()
-    value = models.DecimalField(max_digits=10, decimal_places=0)
+    value = models.BinaryField(max_length=16)
     server_sync = models.IntegerField()
 
     class Meta:
@@ -43,7 +43,7 @@ class TDataSet(models.Model):
     set_cd = models.SmallIntegerField()
     datetime = models.DateTimeField()
     plan_no = models.IntegerField()
-    value = models.DecimalField(max_digits=10, decimal_places=0)
+    value = models.BinaryField(max_length=16)
     device_sync = models.IntegerField()
 
     class Meta:
