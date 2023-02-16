@@ -52,7 +52,7 @@ CREATE TABLE `t_data_get` (
   `get_cd` smallint NOT NULL COMMENT '[FK] protocol_ecl',
   `datetime_start` datetime NOT NULL COMMENT '例)YYYYMMDD 00:00:00 ※30分単位の場合',
   `datetime_end` datetime NOT NULL COMMENT '例)YYYYMMDD 00:29:59 ※30分単位の場合',
-  `value` decimal(10,0) NOT NULL COMMENT '値',
+  `value` binary(16) NOT NULL COMMENT '値',
   `server_sync` tinyint(1) NOT NULL COMMENT 'サーバー未同期:0,同期済:1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='デバイス取得データ (計測値/状態値)';
 
@@ -67,7 +67,7 @@ CREATE TABLE `t_data_set` (
   `set_cd` smallint NOT NULL COMMENT '[FK] protocol_ecl',
   `datetime` datetime NOT NULL COMMENT '設定値を反映するタイミング',
   `plan_no` mediumint NOT NULL COMMENT '再計画でアップする No.',
-  `value` decimal(10,0) NOT NULL COMMENT '値',
+  `value` binary(16) NOT NULL COMMENT '値',
   `device_sync` tinyint(1) NOT NULL COMMENT 'デバイス未反映:0,反映済:1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='デバイス更新データ (制御値/設定値)';
 
