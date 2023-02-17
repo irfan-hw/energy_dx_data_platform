@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
                 ('get_cd', models.SmallIntegerField()),
                 ('datetime_start', models.DateTimeField()),
                 ('datetime_end', models.DateTimeField()),
-                ('value', models.BinaryField(max_length=16)),
+                ('value', models.CharField(max_length=16)),
                 ('server_sync', models.IntegerField()),
             ],
             options={
@@ -110,7 +110,7 @@ class Migration(migrations.Migration):
                 ('set_cd', models.SmallIntegerField()),
                 ('datetime', models.DateTimeField()),
                 ('plan_no', models.IntegerField()),
-                ('value', models.BinaryField(max_length=16)),
+                ('value', models.CharField(max_length=16)),
                 ('device_sync', models.IntegerField()),
             ],
             options={
