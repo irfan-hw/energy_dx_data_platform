@@ -26,7 +26,7 @@ class TDataGetViewSet(viewsets.ModelViewSet):
             "value" in data and "server_sync" in data):
 
             query = TDataGet.objects.filter(
-                device_id = data["device_id"]
+                device_id = data["device_id","get_cd","datetime_start"]
             )
             if query:
                 query.update(
@@ -47,7 +47,7 @@ class TDataGetViewSet(viewsets.ModelViewSet):
                     value = data["value"],
                     server_sync = data["server_sync"]
                 )
-                return Response(data='Data Created invalid', status=status.HTTP_201_CREATED)
+                return Response(data='Data Created', status=status.HTTP_201_CREATED)
         else:
             return Response(data='Data format invalid', status=status.HTTP_400_BAD_REQUEST)
 
@@ -80,7 +80,7 @@ class TDataSetViewSet(viewsets.ModelViewSet):
             "value" in data and "device_sync" in data):
 
             query = TDataSet.objects.filter(
-                device_id = data["device_id"]
+                device_id = data["device_id","set_cd","datetime","plan_no"]
             )
             if query:
                 query.update(

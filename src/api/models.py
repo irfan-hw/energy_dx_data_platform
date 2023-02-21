@@ -26,11 +26,12 @@ class TController(models.Model):
 
 
 class TDataGet(models.Model):
-    device_id = models.CharField(primary_key=True, max_length=32)
+    id = models.AutoField(primary_key=True)
+    device_id = models.CharField(max_length=32)
     get_cd = models.SmallIntegerField()
     datetime_start = models.DateTimeField()
     datetime_end = models.DateTimeField()
-    value = models.CharField(max_length=16)
+    value = models.CharField(max_length=254)
     server_sync = models.IntegerField()
 
     class Meta:
@@ -39,11 +40,12 @@ class TDataGet(models.Model):
 
 
 class TDataSet(models.Model):
-    device = models.OneToOneField('TDevices', models.DO_NOTHING, primary_key=True)
+    id = models.AutoField(primary_key=True)
+    device = models.OneToOneField('TDevices', models.DO_NOTHING)
     set_cd = models.SmallIntegerField()
     datetime = models.DateTimeField()
     plan_no = models.IntegerField()
-    value = models.CharField(max_length=16)
+    value = models.CharField(max_length=254)
     device_sync = models.IntegerField()
 
     class Meta:
