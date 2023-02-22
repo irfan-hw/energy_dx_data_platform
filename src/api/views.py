@@ -26,7 +26,9 @@ class TDataGetViewSet(viewsets.ModelViewSet):
             "value" in data and "server_sync" in data):
 
             query = TDataGet.objects.filter(
-                device_id = data["device_id","get_cd","datetime_start"]
+                device_id = data["device_id"],
+                get_cd = data["get_cd"],
+                datetime_start = data["datetime_start"],
             )
             if query:
                 query.update(
@@ -80,7 +82,10 @@ class TDataSetViewSet(viewsets.ModelViewSet):
             "value" in data and "device_sync" in data):
 
             query = TDataSet.objects.filter(
-                device_id = data["device_id","set_cd","datetime","plan_no"]
+                device_id = data["device_id"],
+                set_cd = data["set_cd"],
+                datetime = data["datetime"],
+                plan_no = data["plan_no"],
             )
             if query:
                 query.update(
