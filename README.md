@@ -10,4 +10,4 @@ Import DB via localhost:3011
 - Enter Container : docker-compose exec app bash
 - Migrate Django : python manage.py migrate
 - Create Django Admin : python manage.py createsuperuser
-- Run Program on background: nohup python kishou_data_torikomi/src/main.py & python manage.py runserver 0.0.0.0:8011
+- Run Program on background: nohup python -u kishou_data_torikomi/src/main.py & python manage.py runserver 0.0.0.0:8011 &
