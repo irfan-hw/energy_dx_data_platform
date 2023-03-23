@@ -16,7 +16,7 @@ class TDataGetSerializer(serializers.ModelSerializer):
 class TDataSetSerializer(serializers.ModelSerializer):
     class Meta:
         model = TDataSet
-        fields = ('device_id', 'set_cd', 'datetime', 'plan_no', 'value', 'device_sync')
+        fields = ('set_cd', 'datetime', 'plan_no', 'value', 'device_sync')
         
 class TDevicesSerializer(serializers.ModelSerializer):
     class Meta:
