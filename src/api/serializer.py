@@ -21,7 +21,7 @@ class TDataSetSerializer(serializers.ModelSerializer):
 class TDevicesSerializer(serializers.ModelSerializer):
     class Meta:
         model = TDevices
-        fields = ('device_id_temp','device_id', 'device_type', 'device_info','calc_info', 'address_IPv6', 'address_IPv4', 'protocol',
+        fields = ('device_id_temp','device_id', 'device_type', 'device_info','calc_info', 'address_ipv6', 'address_ipv4', 'protocol',
         'access_get_interval', 'access_set_interval', 'last_access_get', 'last_access_set','next_access_get',
         'next_access_set', 'status', 'active', 'server_sync', 'last_server_sync', 'added', 'deleted')
 

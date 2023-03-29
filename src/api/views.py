@@ -14,26 +14,58 @@ logger = Logger(__name__)
 
 class TControllerViewSet(viewsets.ModelViewSet):
     serializer_class = TControllerSerializer
-    http_method_names = ['get']
+    http_method_names = ['put']
 
-    def get_queryset(self):
-        self.queryset = TController.objects.all()
+    def put(self, request, *args, **kwargs):
 
-        _controller_id = self.request.query_params.get('controller_id', None)
+        data = json.loads(request.body)
 
-        if _controller_id is None:
-            logger.info('Get Controller | Query parameter not complete 400')
-            raise ValidationError(detail='Query parameter not complete', code=400)
+        if("controller_id" in data and "server_uri" in data and "server_accesstoken" in data and "server_access_interval" in data and 
+            "last_server_access" in data and "next_server_access" in data and "status" in data and "active" in data and "version" in data 
+            and "last_updated" in data):
 
-        try:
-            self.queryset = TController.objects.filter( 
-                controller_id=_controller_id
-            )
-            logger.info('Get Controller | Controller '+_controller_id+' data returned 201')
-            return self.queryset
-        except:
-            logger.error(traceback.format_exc())
-            return Response(data='Get Controller | Error occured', status=status.HTTP_400_BAD_REQUEST)
+            try:
+                query = TController.objects.filter(
+                    controller_id = data["controller_id"]
+                )
+                if query:
+                    query.update(
+                        controller_id = data["controller_id"],
+                        server_uri = data["server_uri"],
+                        server_accesstoken = data["server_accesstoken"],
+                        server_access_interval = data["server_access_interval"],
+                        last_server_access = data["last_server_access"],
+                        next_server_access = data["next_server_access"],
+                        status = data["status"],
+                        active = data["active"],
+                        last_server_sync = data["last_server_sync"] if "last_server_sync" in data else None,
+                        version = data["version"],
+                        last_updated = data["last_updated"]
+                    )
+                    logger.info('TController | '+  data["controller_id"] +' data updated 201')
+                    return Response(data='Data Updated', status=status.HTTP_201_CREATED)
+                else:
+                    query.create(
+                        controller_id = data["controller_id"],
+                        server_uri = data["server_uri"],
+                        server_accesstoken = data["server_accesstoken"],
+                        server_access_interval = data["server_access_interval"],
+                        last_server_access = data["last_server_access"],
+                        next_server_access = data["next_server_access"],
+                        status = data["status"],
+                        active = data["active"],
+                        last_server_sync = data["last_server_sync"] if "last_server_sync" in data else None,
+                        version = data["version"],
+                        last_updated = data["last_updated"]
+                    )
+                    logger.info('TController | '+  data["controller_id"] +' data created 201')
+                    return Response(data='Data Created', status=status.HTTP_201_CREATED)
+            except:
+                logger.error(traceback.format_exc())
+                return Response(data='Error occured', status=status.HTTP_400_BAD_REQUEST)
+        else:
+            logger.info('TController | Data format invalid 400')
+            return Response(data='Data format invalid', status=status.HTTP_400_BAD_REQUEST)
 
 class TDataGetViewSet(viewsets.ModelViewSet):
     serializer_class = TDataGetSerializer
@@ -157,7 +189,27 @@ class TDeviceEnlViewSet(viewsets.ModelViewSet):
 
 class TDevicesViewSet(viewsets.ModelViewSet):
     serializer_class = TDevicesSerializer
-    http_method_names = ['put']
+    http_method_names = ['get','put']
+
+    def get_queryset(self):
+        self.queryset = TDevices.objects.all()
+
+        _device_id = self.request.query_params.get('device_id', None)
+
+        if _device_id is None:
+            logger.info('TDevices | Query parameter not complete 400')
+            raise ValidationError(detail='Query parameter not complete', code=400)
+
+        try:
+            self.queryset = TDevices.objects.filter( 
+                device_id=_device_id
+            )
+            logger.info('TDevices | '+_device_id+' data returned 201')
+            return self.queryset
+        except:
+            logger.error(traceback.format_exc())
+            return Response(data='Error occured', status=status.HTTP_400_BAD_REQUEST)
+        
     def put(self, request, *args, **kwargs):
         data = json.loads(request.body)
 
