@@ -52,3 +52,17 @@ services:
       - "3011:80"
     volumes:
       - ./docker/phpmyadmin/sessions:/sessions
+
+  gui:
+    container_name: energy_dx_gui
+    environment:
+      - TZ=${TZ}
+    build:
+      context: "./docker/gui"
+    volumes:
+      - ./src:/src
+      - ./gui_logs:/app/logs
+    depends_on:
+      - db
+    ports:
+      - "18888:80"

@@ -13,8 +13,8 @@ class TController(models.Model):
     server_uri = models.CharField(max_length=32)
     server_accesstoken = models.CharField(max_length=32)
     server_access_interval = models.IntegerField()
-    last_server_access = models.DateTimeField(blank=True, null=True)
-    next_server_access = models.DateTimeField(blank=True, null=True)
+    last_server_access = models.DateTimeField()
+    next_server_access = models.DateTimeField()
     status = models.IntegerField()
     active = models.IntegerField()
     last_server_sync = models.DateTimeField(blank=True, null=True)
@@ -41,7 +41,7 @@ class TDataGet(models.Model):
 
 class TDataSet(models.Model):
     id = models.AutoField(primary_key=True)
-    device_id = models.CharField(max_length=32)
+    device = models.OneToOneField('TDevices', models.DO_NOTHING)
     set_cd = models.SmallIntegerField()
     datetime = models.DateTimeField()
     plan_no = models.IntegerField()
@@ -82,12 +82,12 @@ class TDeviceEnl(models.Model):
 
 class TDevices(models.Model):
     device_id_temp = models.CharField(max_length=32, primary_key=True)
-    device_id = models.CharField(max_length=32,blank=True)
+    device_id = models.CharField(max_length=32,blank=True, null=True)
     device_type = models.SmallIntegerField()
-    device_info = models.TextField(blank=True)
-    calc_info = models.CharField(max_length=64,blank=True)
-    address_ipv6 = models.CharField(db_column='address_IPv6', max_length=16,blank=True)  # Field name made lowercase.
-    address_ipv4 = models.CharField(db_column='address_IPv4', max_length=16,blank=True)  # Field name made lowercase.
+    device_info = models.TextField(blank=True, null=True)
+    calc_info = models.CharField(max_length=64,blank=True, null=True)
+    address_ipv6 = models.CharField(db_column='address_IPv6', max_length=16,blank=True, null=True)  # Field name made lowercase.
+    address_ipv4 = models.CharField(db_column='address_IPv4', max_length=16,blank=True, null=True)  # Field name made lowercase.
     protocol = models.CharField(max_length=2)
     access_get_interval = models.IntegerField()
     access_set_interval = models.IntegerField()
@@ -99,7 +99,7 @@ class TDevices(models.Model):
     active = models.IntegerField()
     server_sync = models.SmallIntegerField()
     last_server_sync = models.DateTimeField(blank=True, null=True)
-    added = models.DateTimeField(blank=True, null=True)
+    added = models.DateTimeField()
     deleted = models.DateTimeField(blank=True, null=True)
 
     class Meta:

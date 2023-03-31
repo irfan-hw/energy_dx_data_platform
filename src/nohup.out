@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "kishou_data_torikomi/src/main.py", line 46, in <module>
+    logger = Logger(__name__)
+  File "/src/kishou_data_torikomi/src/lib/logger.py", line 21, in __init__
+    logHandler = TimedRotatingFileHandler('./logs/kishou_data_shutoku.log', when='midnight', interval=1)
+  File "/usr/local/lib/python3.7/logging/handlers.py", line 200, in __init__
+    BaseRotatingHandler.__init__(self, filename, 'a', encoding, delay)
+  File "/usr/local/lib/python3.7/logging/handlers.py", line 55, in __init__
+    logging.FileHandler.__init__(self, filename, mode, encoding, delay)
+  File "/usr/local/lib/python3.7/logging/__init__.py", line 1087, in __init__
+    StreamHandler.__init__(self, self._open())
+  File "/usr/local/lib/python3.7/logging/__init__.py", line 1116, in _open
+    return open(self.baseFilename, self.mode, encoding=self.encoding)
+FileNotFoundError: [Errno 2] No such file or directory: '/src/logs/kishou_data_shutoku.log'

@@ -14,14 +14,15 @@ class TDataGetSerializer(serializers.ModelSerializer):
         fields = ('device_id', 'get_cd', 'datetime_start', 'datetime_end', 'value', 'server_sync')
 
 class TDataSetSerializer(serializers.ModelSerializer):
+    device_id = serializers.IntegerField()
     class Meta:
         model = TDataSet
-        fields = ('set_cd', 'datetime', 'plan_no', 'value', 'device_sync')
+        fields = ('device_id', 'set_cd', 'datetime', 'plan_no', 'value', 'device_sync')
         
 class TDevicesSerializer(serializers.ModelSerializer):
     class Meta:
         model = TDevices
-        fields = ('device_id_temp','device_id', 'device_type', 'device_info','calc_info', 'address_ipv6', 'address_ipv4', 'protocol',
+        fields = ('device_id_temp','device_id', 'device_type', 'device_info','calc_info', 'address_IPv6', 'address_IPv4', 'protocol',
         'access_get_interval', 'access_set_interval', 'last_access_get', 'last_access_set','next_access_get',
         'next_access_set', 'status', 'active', 'server_sync', 'last_server_sync', 'added', 'deleted')
 
