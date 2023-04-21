@@ -5,21 +5,29 @@
 {% block css %}
   <link rel="stylesheet" href="{% static 'css/houjin.css' %}">
   <script>
-  $(document).ready(function() {
-    console.log('hello1')
-      $('#houjin-list').on('click', 'li', function() {
-        var houjin_id = $(this).data('id');
-        console.log('hello3')
+    $(document).ready(function() {
+      console.log('hello1');
+      $('.houjin-form button').click(function(event) {
+        event.preventDefault(); // prevent default form submission behavior
+        var houjin_id = parseInt($(this).data('id'));
         $.ajax({
-          url: '/houjin/' + houjin_id + '/buildings/',
-          success: function(data) {
-            $('#building-list').html(data.buildings.join('<br>'));
-          }
-        });
+            url: '/houjin/' + houjin_id + '/buildings/',
+            success: function(data) {
+              var buildingList = $('#building-list');
+              buildingList.empty(); // clear previous content
+              for (var i = 0; i < data.buildings.length; i++) {
+                var buildingName = data.buildings[i];
+                var button = $('<button class="btn btn-light btn-block">' + buildingName + '</button>');
+                button.click(function(event) {
+                  event.preventDefault(); // prevent default form submission behavior
+                  window.location.href = "/controller"; // redirect to controller.html
+                });
+                buildingList.append(button);
+              }
+            }
+          });
       });
-
-  });
-
+    });
   </script>
 {% endblock %}
 
@@ -27,7 +35,7 @@
   <div class="d-flex justify-content-center align-items-center" style="height: 90vh;">
     <div class="row no-gutters">
       <div class="col-lg-6">
-        <form class="rounded p-4 form-container" style="width: 130%;">
+        <form class="rounded p-4 form-container houjin-form" style="width: 130%;">
           <h2 class="text-center mb-4">法人選択</h2>
           {% csrf_token %}
           <div class="mb-3">
@@ -46,8 +54,7 @@
           {% csrf_token %}
           <div class="mb-3">
             <label for="building" class="form-label">施設名</label>
-            <ul class="list-group" style="height: 250px;" id="building-list">
-            </ul>
+            <div class="list-group" style="height: 250px;" id="building-list"></div>
           </div>          
         </form>
       </div>

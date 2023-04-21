@@ -59,10 +59,15 @@ class Houjin(models.Model):
     id = models.AutoField(primary_key=True)
     houjin_name = models.CharField(max_length=100)
     user= models.ForeignKey(User, on_delete=models.CASCADE)
-    
+
+    class Meta:
+        db_table = 't_houjin'
+
 class Shisetsu(models.Model):
     id = models.AutoField(primary_key=True)
     shisetsu_name = models.CharField(max_length=100)
-    houjin_id = models.ForeignKey(Houjin, on_delete=models.CASCADE)
-    # other fields for the school model
+    houjin = models.ForeignKey(Houjin, on_delete=models.CASCADE)
+    
+    class Meta:
+        db_table = 't_shisetsu'
 

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.db import connection
-from .models import Houjin
+from .models import Houjin, Shisetsu
 from .database import get_t_controller_data, get_t_controller_object, get_t_devices_data, get_t_devices_object
 
 def controller(request):
@@ -48,7 +48,7 @@ def houjin(request):
 
 def shisetsu(request, houjin_id):
     shisetsu_list = Shisetsu.objects.filter(houjin_id=houjin_id)
-    buildings = [s.building_name for s in shisetsu]
+    buildings = [s.shisetsu_name for s in shisetsu_list]
     data = {'buildings': buildings}
     return JsonResponse(data)
 
