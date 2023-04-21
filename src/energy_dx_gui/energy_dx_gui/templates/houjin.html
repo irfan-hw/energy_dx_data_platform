@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Houjin{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static 'css/houjin.css' %}">
+  <script>
+  $(document).ready(function() {
+    console.log('hello1')
+      $('#houjin-list').on('click', 'li', function() {
+        var houjin_id = $(this).data('id');
+        console.log('hello3')
+        $.ajax({
+          url: '/houjin/' + houjin_id + '/buildings/',
+          success: function(data) {
+            $('#building-list').html(data.buildings.join('<br>'));
+          }
+        });
+      });
+
+  });
+
+  </script>
+{% endblock %}
+
+{% block content %}
+  <div class="d-flex justify-content-center align-items-center" style="height: 90vh;">
+    <div class="row no-gutters">
+      <div class="col-lg-6">
+        <form class="rounded p-4 form-container" style="width: 130%;">
+          <h2 class="text-center mb-4">法人選択</h2>
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="corporation" class="form-label">法人名</label>
+            <ul class="list-group" style="height: 250px;"　id="houjin-list">
+              {% for houjin in houjins %}
+              <button class="list-group-item btn btn-light" data-id="{{ houjin.id }}">{{ houjin.houjin_name }}</button>
+              {% endfor %}            
+            </ul>
+          </div>
+        </form>
+      </div>
+      <div class="col-lg-6">
+        <form class="rounded p-4 form-container" style="width: 200%;">
+          <h2 class="text-center mb-4">施設選択</h2>
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="building" class="form-label">施設名</label>
+            <ul class="list-group" style="height: 250px;" id="building-list">
+            </ul>
+          </div>          
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

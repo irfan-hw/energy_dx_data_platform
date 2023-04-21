@@ -1,0 +1,35 @@
+<!-- child.html -->
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} 省エネニーズを満たす {% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock %}
+
+{% block content %}
+  <div class="d-flex justify-content-center align-items-center" style="height: 90vh;">
+    <form class="border rounded p-4 form-container" style="width: 380px;">
+      <h2 class="text-center mb-4">ログイン</h2>
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="username" class="form-label">ユーザー名</label>
+        <input type="text" name="username" id="username" class="form-control">
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">パスワード</label>
+        <input type="password" name="password" id="password" class="form-control">
+      </div>
+      <div style="display: flex; flex-direction: column;">
+        <button type="submit" class="submitbutton btn btn-primary">ログイン</button>
+        <a class="forgotpassword" href="https://example.com/group-come-here">パスワード忘れた場合?</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}
+
+{% block footer %}
+  <p>&copy; 2023 Mya Website. All rights reserved.</p> 
+{% endblock %}

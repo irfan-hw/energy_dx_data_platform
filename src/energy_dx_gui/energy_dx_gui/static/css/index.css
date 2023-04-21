@@ -1,0 +1,18 @@
+body {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.forgotpassword {
+    font-size: 14px;
+}
+
+.submitbutton {
+    margin-bottom: 10px;
+}
+
+.form-container {
+    background-color: white;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}

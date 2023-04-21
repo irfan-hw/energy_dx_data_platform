@@ -12,8 +12,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libssl-dev
 
 RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+    pip install --no-cache-dir -r requirements.txt \
+    pip install mysqlclient
+
+RUN apt-get update && apt-get install -y default-libmysqlclient-dev
 
 COPY . .
 
-CMD ["python", "/src/manage.py", "runserver", "0.0.0.0:8083"]
+CMD ["python", "/src/energy_dx_gui/manage.py", "runserver", "0.0.0.0:80"]

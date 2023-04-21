@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css %}
+<style>
+  .table-danger {
+  border: 2px solid red;
+  color: white;
+  background-color: red;
+}
+</style>
+<script src="{% static 'js/datatables.min.js' %}"></script>
+<script>
+$(document).ready(function() {
+    console.log("hello");
+    $('#ControllerTable').DataTable({
+        "language": {
+            "url": "https://cdn.datatables.net/plug-ins/1.11.2/i18n/ja.json"
+        }
+    });
+});
+</script>
+<style>
+  #ControllerTitle {
+    display: flex;
+    justify-content: center;
+  }
+  
+  #ControllerTitle caption {
+    text-align: center;
+  }
+</style>
+{% endblock %}
+
+{% block header %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">エナジーDX</a>
+  </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div id="ControllerTitle"><caption ><h2>デバイス管理</h2></caption></div>
+  <table id="ControllerTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>デバイスID</th>
+        <th>デバイスタイプ</th>
+        <th>デバイス情報</th>
+        <th>IPV6（EL接続用）</th>
+        <th>IPV4（EL接続用）</th>
+        <th>値計算情報</th>
+        <th>プロトコル</th>
+        <th>計測インターバル</th>
+        <th>制御インターバル</th>
+        <th>前回計測日時</th>
+        <th>前回制御日時</th>
+        <th>次回計測日時</th>
+        <th>次回制御日時</th>
+        <th>ステータス</th>
+        <th>稼働状態</th>
+        <th>サーバー同期状態</th>
+        <th>編集</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in devices %}
+        <tr>
+          <td>{{ row.0}}</td>
+          {% if row.1 is None %}
+          <td class="table-danger"></td>
+        {% else %}
+          <td>{{ row.1 }}</td>
+        {% endif %}
+          <td>{{ row.2 }}</td>
+          <td>{{ row.3 }}</td>
+          <td>{{ row.4 }}</td>
+          <td>{{ row.5 }}</td>
+          <td>{{ row.6 }}</td>
+          <td>{{ row.7 }}</td>
+          <td>{{ row.8 }}</td>
+          <td>{{ row.9 }}</td>
+          <td>{{ row.10 }}</td>
+          <td>{{ row.11 }}</td>
+          <td>{{ row.12 }}</td>
+          <td>{{ row.13 }}</td>
+          <td>{{ row.14 }}</td>
+          <td>{{ row.15 }}</td>
+          <td>{{ row.16 }}</td>
+          {% if row.1 %}
+          <td><span style="color:green; font-weight:bold;">OK</span></td>
+          {% else %}
+          <td><a href="{% url 'devicesedit' pk=row.0 %}">編集</a></td>
+           {% endif %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

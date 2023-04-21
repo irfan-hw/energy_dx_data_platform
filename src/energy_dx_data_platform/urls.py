@@ -22,7 +22,9 @@ from api.urls import router as api_router
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('energy_gui.views.houjin')),
     url(r'^api/', include(api_router.urls)),
     url(r'^api-token-auth/', obtain_jwt_token),
+    
 
 ]

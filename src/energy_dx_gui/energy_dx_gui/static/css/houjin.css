@@ -1,0 +1,10 @@
+.form-container {
+    background-color: white;
+    padding: 20px;
+    margin: -12px;
+    height: 400px;
+  }
+
+  .col-md-6:first-child form {
+    border-right: 1px solid #ddd;
+  }

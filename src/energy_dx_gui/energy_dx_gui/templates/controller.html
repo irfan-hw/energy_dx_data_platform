@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css %}
+<script src="{% static 'js/datatables.min.js' %}"></script>
+<script>
+$(document).ready(function() {
+    console.log("hello");
+    $('#ControllerTable').DataTable({
+        "language": {
+            "url": "https://cdn.datatables.net/plug-ins/1.11.2/i18n/ja.json"
+        }
+    });
+});
+</script>
+<style>
+  #ControllerTitle {
+    display: flex;
+    justify-content: center;
+  }
+  
+  #ControllerTitle caption {
+    text-align: center;
+  }
+
+  .table-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  }
+</style>
+{% endblock %}
+
+{% block header %}
+<nav class="navbar navbar-expand-lg navbar-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">エナジーDX</a>
+  </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="float-container">
+  <div class="table-container">
+    <div id="ControllerTitle"><caption ><h2>コントローラー管理</h2></caption></div>
+      <table id="ControllerTable">
+        <thead>
+          <tr>
+            <th>デバイスID</th>
+            <th>サーバーURI</th>
+            <th>アクセストークン</th>
+            <th>サーバー接続間隔</th>
+            <th>前回サーバーアクセストークン</th>
+            <th>次回サーバーアクセストークン</th>
+            <th>ステータス</th>
+            <th>稼働状態</th>
+            <th>サーバー同期最終日時</th>
+            <th>アプリバージョン</th>
+            <th>プロパティバージョン</th>
+            <th>編集</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in controller %}
+            <tr>
+              <td>{{ row.0}}</td>
+              <td>{{ row.1 }}</td>
+              <td>{{ row.2 }}</td>
+              <td>{{ row.3 }}</td>
+              <td>{{ row.4 }}</td>
+              <td>{{ row.5 }}</td>
+              <td>{{ row.6 }}</td>
+              <td>{{ row.7 }}</td>
+              <td>{{ row.8 }}</td>
+              <td>{{ row.9 }}</td>
+              <td>{{ row.10 }}</td>
+              <td><a href="{% url 'controlleredit' pk=row.0 %}">編集</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+  </div>
+</div>
+{% endblock %}
+
