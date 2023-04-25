@@ -1,12 +1,29 @@
+from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.db import connection
 from .models import Houjin, Shisetsu
 from .database import get_t_controller_data, get_t_controller_object, get_t_devices_data, get_t_devices_object
 
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        print(username)
+        user = authenticate(username=username, password=password)
+        print(user)
+        if user is not None:
+            login(request, user)
+            return redirect('houjin.html') # replace with the name of your houjin.html template
+        else:
+            return render(request, 'index.html', {'error_message': 'Invalid credentials'})
+    else:
+        return render(request, 'index.html')
+    
 def controller(request):
+    building_name = request.GET.get('building')
     controller = get_t_controller_data()
-    context = {'controller': controller}
+    context = {'controller': controller, 'building_name': building_name}
     return render(request, 'controller.html', context)  
 
 def controlleredit(request, pk):

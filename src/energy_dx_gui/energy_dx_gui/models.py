@@ -55,6 +55,9 @@ class User(AbstractBaseUser):
     def is_staff(self):
         return self.is_admin
 
+    class Meta:
+        db_table = 't_users'
+
 class Houjin(models.Model):
     id = models.AutoField(primary_key=True)
     houjin_name = models.CharField(max_length=100)

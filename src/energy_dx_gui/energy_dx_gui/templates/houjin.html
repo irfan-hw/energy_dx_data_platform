@@ -2,6 +2,7 @@
 {% load static %}
 {% block title %}Houjin{% endblock %}
 
+
 {% block css %}
   <link rel="stylesheet" href="{% static 'css/houjin.css' %}">
   <script>
@@ -20,7 +21,8 @@
                 var button = $('<button class="btn btn-light btn-block">' + buildingName + '</button>');
                 button.click(function(event) {
                   event.preventDefault(); // prevent default form submission behavior
-                  window.location.href = "/controller"; // redirect to controller.html
+                  var buildingName = $(this).text(); // get the text of the clicked button
+                  window.location.href = "/controller?building=" + encodeURIComponent(buildingName); // redirect to controller.html with buildingName as query parameter
                 });
                 buildingList.append(button);
               }

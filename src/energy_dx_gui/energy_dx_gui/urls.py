@@ -16,11 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.views.generic import TemplateView
+from django.shortcuts import redirect
 from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', TemplateView.as_view(template_name='index.html'), name='home'),
+    path('login/', views.user_login, name='user_login'),
+    path('login/houjin.html', lambda r: redirect('houjin', permanent=True)),
     path('controller/', views.controller, name='controller'),
     path('controlleredit/<pk>/', views.controlleredit, name='controlleredit'),
     path('devices/', views.devices, name='devices'),
