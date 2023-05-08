@@ -30,6 +30,13 @@ urlpatterns = [
     path('devicesedit/<pk>/', views.devicesedit, name='devicesedit'),
     path('houjin/', views.houjin, name='houjin'),
     path('houjin/<int:houjin_id>/buildings/', views.shisetsu, name='shisetsu'),
+    path('houjin-search/', views.houjin_search_view, name='houjin_search'),
+    path('building-name/', views.store_building_name, name='store-building-name'),
+    path('store-device-id/', views.store_device_id, name='store_device_id'),
     path('get-class-names/<int:school_id>/', views.get_class_names, name='get_class_names'),
+    path('get-building-names/', views.get_shisetsu_names, name='store-building-name'),
+    path('get-building-names-by-houjin/<int:houjin_id>/', views.get_shisetsu_names, name='get_building_names_by_houjin'),
+    path('get-all-building-names/', views.get_all_shisetsu_names, name='get-all-building-names'),
+    path('get-houjin-names/', views.get_houjin_names, name='store-houjin-name'),
     
 ]

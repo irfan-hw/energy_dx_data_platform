@@ -1,22 +1,19 @@
 {% extends "base.html" %}
 {% load static %}
 {% block css %}
-<script src="{% static 'js/datatables.min.js' %}"></script>
-<script>
-$(document).ready(function() {
-    console.log("hello");
-    $('#ControllerTable').DataTable({
-        "language": {
-            "url": "https://cdn.datatables.net/plug-ins/1.11.2/i18n/ja.json"
-        }
-    });
-});
-</script>
+<link rel="stylesheet" href="{% static 'css/datatables.min.css' %}">
 <style>
   #ControllerTitle {
     display: flex;
     justify-content: center;
   }
+
+  #ControllerTitleh2 h2{
+  margin: 0;
+  text-align: left;
+  font-size: 22px;
+  margin-bottom: 10px; 
+}
   
   #ControllerTitle caption {
     text-align: center;
@@ -28,22 +25,133 @@ $(document).ready(function() {
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   }
+  
+  #searchModal {
+    position: absolute;
+    top: 60px;
+    max-width: 600px;
+    height: 400px;
+    max-height: 300px;
+    overflow-y: auto;
+    margin: 0;
+    margin-left: 173px;
+  }
+
+  #searchModal.show {
+    display: block; /* show the modal when it has the "show" class */
+  }
+  
+  @media (min-width: 768px) {
+    #searchModal .modal-dialog {
+      width: 600px;
+      height: 300px;
+      margin: 0;
+    }
+  }
+
+  .modal-dialog {
+    display: flex;
+    flex-direction: column;
+  }
+  .modal-content {
+    background-color: rgb(15, 37, 74);
+    height: 280px;
+    overflow-y: auto;
+  }
+
+  .modal-title,
+  .modal-body {
+    color: rgb(255, 255, 255);
+    display:flex;
+    align-items: stretch;
+  }
+
+  .modal-title {
+    font-size: 1rem;
+  }
+
+  .modal-menu {
+    width: 300px;
+    height: 100%;
+    display: flex;
+    align-items: left;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .modal-menu p {
+    font-size: 14px;
+  }
+
+  .modal-menu p:hover {
+    cursor: pointer;
+  }
+
+  #searchResult {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+  } 
+
+  #searchHoujin a {
+    color: white;
+    text-decoration: none;
+  }
+  
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  th, td { white-space: nowrap; }
+
 </style>
 {% endblock %}
 
 {% block header %}
 <nav class="navbar navbar-expand-lg navbar-light">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">エナジーDX</a>
+    <div class="d-flex align-items-center">
+      <a class="navbar-brand" href="#">エナジーDX</a>
+
+      <!-- Search bar form -->
+      <form class="d-flex ms-4" id="searchForm">
+        <input class="form-control me-2" type="search" placeholder="検索" aria-label="Search" id="searchInput" >
+      </form>
+    </div>
   </div>
 </nav>
 {% endblock %}
 
 {% block content %}
+<!-- Search modal -->
+<div class="modal" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true" data-bs-focus=false data-bs-backdrop=false>
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document" style="pointer-events: none;">
+    <div class="modal-content" style="pointer-events: auto;">
+      <div class="modal-header border-1">
+        <h5 class="modal-title" id="searchModalLabel">検索結果</h5>
+      </div>
+      <div class="modal-body">
+        <div id="searchHoujin" class="modal-menu">
+        </div>
+        <div id="searchResult" class="border-left"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="float-container">
   <div class="table-container">
     <div id="ControllerTitle"><caption ><h2>コントローラー管理</h2></caption></div>
-    <div id="ControllerTitle"><caption ><h2>{{ building_name }}</h2></caption></div>
+    <div id="ControllerTitleh2"><caption ><h2>{{ building_name }}</h2></caption></div>
       <table id="ControllerTable">
         <thead>
           <tr>
@@ -59,6 +167,7 @@ $(document).ready(function() {
             <th>アプリバージョン</th>
             <th>プロパティバージョン</th>
             <th>編集</th>
+            <th>デバイス管理</th>
           </tr>
         </thead>
         <tbody>
@@ -75,7 +184,8 @@ $(document).ready(function() {
               <td>{{ row.8 }}</td>
               <td>{{ row.9 }}</td>
               <td>{{ row.10 }}</td>
-              <td><a href="{% url 'controlleredit' pk=row.0 %}">編集</a></td>
+              <td><a href="{% url 'controlleredit' pk=row.0 %}" >編集</a></td>
+              <td><a href="" class="show-device">示す</a></td>
             </tr>
           {% endfor %}
         </tbody>
@@ -84,3 +194,215 @@ $(document).ready(function() {
 </div>
 {% endblock %}
 
+{% block scripts %}
+<script src="{% static 'js/datatables.min.js' %}"></script>
+<script>
+
+function listAllBuildings() {
+      // Make an AJAX call to retrieve all the shisetsu names
+      $.ajax({
+        url: '/get-all-building-names/',
+        type: 'GET',
+        success: function(response) {
+          // Clear the existing list and add the new building names to it
+          var buildingList = $('#searchResult');
+          buildingList.empty();
+          console.log(response.buildings)
+          for (var i = 0; i < response.buildings.length; i++) {
+            var shisetsuName = response.buildings[i];
+            var listItem =  $('<div class="searchItem" style="background-color: rgb(34, 50, 78); margin: 3px 0; padding: 8px 10px;"><p>' + shisetsuName + '</p></div>');
+            listItem.click(function(event) {
+              event.preventDefault(); // prevent default link behavior
+              var buildingName = $(this).find('p').text(); // get the building name from the clicked element
+              $.ajax({
+                url: '/building-name/', // URL of the view to store building name in session
+                method: 'POST',
+                data: {
+                  'building_name': buildingName,
+                  'csrfmiddlewaretoken': '{{ csrf_token }}' // add CSRF token to the POST data
+                },
+                success: function(response) {
+                  // redirect to controller view on success
+                  window.location.href = '/controller/';
+                }
+              });
+            });
+            buildingList.append(listItem);
+          }
+        }
+      });
+    }
+
+function listBuildingsByHoujin(houjinId) {
+  // Make an AJAX call to retrieve the shisetsu names filtered by the houjin_id
+  $.ajax({
+    url: '/get-building-names-by-houjin/' + houjinId,
+    type: 'GET',
+    success: function(response) {
+      // Clear the existing list and add the new building names to it
+      var buildingList = $('#searchResult');
+      buildingList.empty();
+      console.log(response.buildings)
+      for (var i = 0; i < response.buildings.length; i++) {
+        var buildingName = response.buildings[i];
+        var listItem = $('<div class="searchItem" style="background-color: rgb(34, 50, 78); margin: 3px 0; padding: 8px 10px;"><p>' + buildingName + '</p></div>');
+        listItem.click(function(event) {
+              event.preventDefault(); // prevent default link behavior
+              var buildingName = $(this).find('p').text(); // get the building name from the clicked element
+              $.ajax({
+                url: '/building-name/', // URL of the view to store building name in session
+                method: 'POST',
+                data: {
+                  'building_name': buildingName,
+                  'csrfmiddlewaretoken': '{{ csrf_token }}' // add CSRF token to the POST data
+                },
+                success: function(response) {
+                  // redirect to controller view on success
+                  window.location.href = '/controller/';
+                }
+              });
+            });
+        buildingList.append(listItem);
+      }
+    }
+  });
+}
+
+
+$(document).ready(function() {
+    $('#ControllerTable').DataTable({
+        "language": {
+            "url": "https://cdn.datatables.net/plug-ins/1.11.2/i18n/ja.json"
+        },
+
+        scrollX: true
+    });
+
+    $('#ControllerTable').on('click', 'a.show-device', function(event) {
+      event.preventDefault();
+      var deviceId = $(this).closest('tr').find('td:first-child').text();
+      $.ajax({
+          url: '/store-device-id/',
+          method: 'POST',
+          data: {
+            'device_id': deviceId,
+            'csrfmiddlewaretoken': '{{ csrf_token }}'
+          },
+          success: function(response) {
+            // Redirect to devices page
+            window.location.href = '/devices/';
+          }
+        });
+    });
+    
+    // Show the search modal when the search input is clicked
+    $("#searchInput").on("click", function() {    
+      event.stopPropagation();
+      $('#searchModal').modal('show', {
+        backdrop: 'static',
+        keyboard: false
+      });
+
+    $(document).on('click', function(event) {
+      if (!$(event.target).closest('#searchModal').length) {
+        // Clicked outside the modal
+        $('#searchModal').modal('hide');
+      }
+    });
+      
+      // Make an AJAX call to retrieve the building names
+    $.ajax({
+      url: '/get-building-names/',
+      type: 'GET',
+      success: function(response) {
+        // Clear the existing list and add the new building names to it
+        var buildingList = $('#searchResult');
+        buildingList.empty();
+        console.log(response.buildings)
+        for (var i = 0; i < response.buildings.length; i++) {
+          var buildingName = response.buildings[i];
+          var listItem =  $('<div class="searchItem" style="background-color: rgb(34, 50, 78); margin: 3px 0; padding: 8px 10px;"><p style="color: #cccccc;">' + buildingName + '</p></div>');
+          buildingList.append(listItem);
+        }
+      }
+    });
+
+      // Make a second AJAX call to retrieve the houjin names
+    $.ajax({
+      url: '/get-houjin-names/',
+      type: 'GET',
+      success: function(response) {
+        // Clear the existing list and add the new building names to it
+        var houjinsList = $('#searchHoujin');
+        houjinsList.empty();
+        if (houjinsList.children().length === 0) {
+          houjinsList.append('<p style="color: white; margin: 4px 20px;"><a href="#" onclick="listAllBuildings()">全部</a></p>');
+         }
+        for (var i = 0; i < response.houjins.length; i++) {
+          var houjin = response.houjins[i];
+          var listItem = $('<p style="color: white !important; margin: 4px 20px;"><a href="#" onclick="listBuildingsByHoujin(' + houjin.id + ')">' + houjin.name + '</a></p>');
+          houjinsList.append(listItem);
+        }
+      }
+    });
+
+    });
+
+    // Search function to retrieve results from the server
+    function search(query) {
+      $.ajax({
+        type: "GET",
+        url: "/houjin-search/",
+        data: {
+          'query': query
+        },
+        success: function(response) {
+            // Clear any existing search results
+            $('#searchResult').empty();
+
+          // Loop through the buildings array and append each building name to the #searchResults element
+          for (var i = 0; i < response.buildings.length; i++) {
+            var buildingName = response.buildings[i].fields.shisetsu_name;
+            var searchItem = $('<div class="searchItem" style="background-color: rgb(34, 50, 78);  margin: 3px 0; padding: 8px 10px;""><p style="color: #cccccc;">' + buildingName + '</p></div>');
+            searchItem.click(function(event) {
+              event.preventDefault(); // prevent default link behavior
+              var buildingName = $(this).find('p').text(); // get the building name from the clicked element
+              $.ajax({
+                url: '/building-name/', // URL of the view to store building name in session
+                method: 'POST',
+                data: {
+                  'building_name': buildingName,
+                  'csrfmiddlewaretoken': '{{ csrf_token }}' // add CSRF token to the POST data
+                },
+                success: function(response) {
+                  // redirect to controller view on success
+                  window.location.href = '/controller/';
+                }
+              });
+            });
+            $('#searchResult').append(searchItem);
+          }
+
+        },
+        error: function(response) {
+          console.log('Error:', response);
+        }
+      });
+    }
+
+    // Listen for input on the search query input field
+    $('#searchInput').on('input', function() {
+      // Retrieve the query value
+      var query = $(this).val();
+      
+      // Call the search function with the query
+      search(query);
+    });
+
+    $("#searchModal").on("show.bs.modal shown.bs.modal", function(e) {
+        // Remove overlay and enable scrolling of body
+        $("body").removeClass("modal-open").find(".modal-backdrop").remove();
+    });
+  });
+</script>
+{% endblock %}
